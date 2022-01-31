@@ -1,5 +1,7 @@
-.item {
-  width:100px;
-  height:100px;
-  background-color:blue;
+.container {
+  display: inline-block;
+  position: absolute;
+  width:200px;
+  height:200px;
+  background-color: yellowgreen;
 }
