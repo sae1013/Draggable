@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import logo from "./logo.svg";
+import Draggable from "./Draggable";
+import classes from "./App.module.css";
 
 function App() {
+  const [dotted,setDotted] = React.useState(false)
+  const dropHandler = (e) => {
+    e.preventDefault()
+    console.log(e.dataTransfer.getData('key'))
+    setDotted(false)
+    // console.log('onDrop')
+  }
+  const dragOverHandler =(e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "copy"
+    // console.log('onDragover')
+  }
+  const dragEnterHandler = (e) => {
+    console.log('dragEnter')
+    setDotted(true)
+  }
+  const dragLeaveHandler = (e) => {
+    console.log('dragLeave')
+    setDotted(false)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Draggable />
+      <div className={`${classes.dropzone} ${dotted ? classes.dotted: ''}`} 
+        droppable = "true"
+        onDrop = {dropHandler}
+        onDragOver = {dragOverHandler}
+        onDragEnter = {dragEnterHandler}
+        onDragLeave = {dragLeaveHandler}
         >
-          Learn React
-        </a>
-      </header>
+        DropZone
+      </div>
     </div>
   );
 }

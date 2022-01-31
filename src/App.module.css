@@ -1,0 +1,17 @@
+.App {
+  height: 100vh;
+  position: relative;
+}
+
+.dropzone {
+  position: absolute;
+  width:400px;
+  height:400px;
+  background-color: rgb(83, 180, 83);
+  /* transform: translate(50%,50%); */
+  top:50%;
+  left:50%;
+}
+.dotted {
+  border: 1px dotted black;
+}
