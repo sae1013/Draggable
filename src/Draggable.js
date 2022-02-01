@@ -4,7 +4,7 @@ function Draggable({ children }) {
   const targetRef = React.useRef(null);
 
   const mouseDown = (e) => {
-    const clientRect = targetRef.current.getBoundingClientRect();
+    const targetRect = targetRef.current.getBoundingClientRect();
 
     const [startX, startY] = [e.clientX, e.clientY];
 
@@ -13,18 +13,18 @@ function Draggable({ children }) {
 
     const mouseMove = (e) => {
       targetRef.current.style.opacity = "0.7";
-      let nextOffsetX = clientRect.x + e.clientX - startX;
-      let nextOffsetY = clientRect.y + e.clientY - startY;
+      let nextOffsetX = targetRect.x + e.clientX - startX;
+      let nextOffsetY = targetRect.y + e.clientY - startY;
 
       if (nextOffsetX < 0) {
         nextOffsetX = 0;
-      } else if (nextOffsetX + clientRect.width > viewportWidth) {
-        nextOffsetX = viewportWidth - clientRect.width;
+      } else if (nextOffsetX + targetRect.width > viewportWidth) {
+        nextOffsetX = viewportWidth - targetRect.width;
       }
       if (nextOffsetY < 0) {
         nextOffsetY = 0;
-      } else if (nextOffsetY + clientRect.height > viewportHeight) {
-        nextOffsetY = viewportHeight - clientRect.height;
+      } else if (nextOffsetY + targetRect.height > viewportHeight) {
+        nextOffsetY = viewportHeight - targetRect.height;
       }
       targetRef.current.style.left = `${nextOffsetX}px`;
       targetRef.current.style.top = `${nextOffsetY}px`;
