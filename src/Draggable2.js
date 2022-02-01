@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from "react";
-import classes from "./Draggable2.module.css";
 
-// 이걸 구현하려면, 클릭했을 때,
 function Draggable2({ children }) {
-  
+
   const [pos, setPos] = useState({ diffX: 0, diffY: 0 });
   const [style, setStyle] = useState({ position: "absolute" });
   const [dragging, setDragging] = useState(false);

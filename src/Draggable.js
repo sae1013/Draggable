@@ -4,7 +4,6 @@ function Draggable({ children }) {
   const targetRef = React.useRef(null);
 
   const mouseDown = (e) => {
-    console.log('mouseDown')
     const clientRect = targetRef.current.getBoundingClientRect();
 
     const [startX, startY] = [e.clientX, e.clientY];
