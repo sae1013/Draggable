@@ -6,7 +6,6 @@
 
 .box {
   box-sizing: border-box;
-  position: absolute;
   width:200px;
   height:200px;
   border-radius: 10px;
@@ -14,10 +13,3 @@
   background-color: yellowgreen;
   
 }
-/* .container {
-  display: inline-block;
-  position: absolute;
-  width:200px;
-  height:200px;
-  background-color: yellowgreen;
-} */
