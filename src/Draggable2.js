@@ -1,113 +1,73 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import classes from "./Draggable2.module.css";
 
-// 이걸 구현하려면, 클릭했을 때, 
-function Draggable2() {
-  const [pos, setPos] = useState({startX:0,startY:0}); // 드래그를 시작하는 시점을 저장
-  const [style, setStyle] = useState({});
+// 이걸 구현하려면, 클릭했을 때,
+function Draggable2({ children }) {
+  
+  const [pos, setPos] = useState({ diffX: 0, diffY: 0 });
+  const [style, setStyle] = useState({ position: "absolute" });
+  const [dragging, setDragging] = useState(false);
 
-  const ref = useRef(null);
-
-  const mouseDownHandler = (e) => {
-    // const boundingRect = ref.current.getBoundingClientRect();
-    console.log(e.target.getBoundingClientRect())
-    // setPos({
-    //   startX: e.clientX,
-    //   startY: e.clientY
-    // });
-
+  const mouseDownHandler = useCallback((e) => {
+    const targetRect = e.target.getBoundingClientRect();
+    setDragging(true);
+    setPos({
+      diffX: e.clientX - targetRect.x,
+      diffY: e.clientY - targetRect.y,
+    });
     setStyle({
       ...style,
-      opacity:"0.7"
+      opacity:0.7
     })
+  }, [style]);
 
-    const mouseMove = (e) => {
-      // setStyle({
-      //   left: e.clientX-pos.startX+boundingRect.x,
-      //   top: e.clientY-pos.starty+boundingRect.y
-      // })
-      // // let offsetX = e.clientX - pos.diffX
-      // // console.log(pos)
-      // // let offsetY = e.clientY-pos.diffY  
-      // // setStyle({...style, left:offsetX,top:offsetY})
-    };
-    
-    const mouseUphandler = () => {
-      setStyle({
-        ...style,
-        opacity:"1"
-      })
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseup", mouseUphandler);
-    };
+  const mouseUpHandler = useCallback((e) => {
+    setDragging(false);
+    setStyle({...style,opacity:1})
+  }, [style]);
 
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseup", mouseUphandler);
-  };
+  const mouseMoveHandler = useCallback(
+    (e) => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const targetRect = e.target.getBoundingClientRect();
+      if (dragging) {
+        let left = e.clientX - pos.diffX;
+        let top = e.clientY - pos.diffY;
 
-  return (
-    <div ref={ref} style = {style} className={classes.box} onMouseDown={mouseDownHandler}>
-      클릭
-    </div>
+        if (left + targetRect.width > viewportWidth) {
+          left = viewportWidth - targetRect.width;
+        } else if (left < 0) {
+          left = 0;
+        }
+        if (top + targetRect.height > viewportHeight) {
+          top = viewportHeight - targetRect.height;
+        } else if (top < 0) {
+          top = 0;
+        }
+        setStyle({
+          ...style,
+          left,
+          top,
+        });
+      }
+    },
+    [dragging, pos,style]
   );
+  const mouseLeaveHandler = useCallback(() => {
+    setDragging(false);
+    setStyle({...style,opacity:1})
+  },[style]);
+
+  const TargetComponent = React.cloneElement(children, {
+    onMouseDown: mouseDownHandler,
+    onMouseUp: mouseUpHandler,
+    onMouseMove: mouseMoveHandler,
+    onMouseLeave: mouseLeaveHandler,
+    style: style,
+  });
+
+  return <React.Fragment>{TargetComponent}</React.Fragment>;
 }
 
 export default Draggable2;
-
-// import React from "react";
-
-// function Draggable({ children }) {
-//   const targetRef = React.useRef(null);
-
-//   const mouseDown = (e) => {
-//     const [curLeft, curTop] = [
-//       targetRef.current.offsetLeft,
-//       targetRef.current.offsetTop,
-//     ];
-//     const [startX, startY] = [e.clientX, e.clientY];
-//     const [clientWidth, clientHeight] = [
-//       targetRef.current.clientWidth,
-//       targetRef.current.clientHeight,
-//     ];
-//     const viewportWidth = window.innerWidth;
-//     const viewportHeight = window.innerHeight;
-
-//     const mouseMove = (e) => {
-//       targetRef.current.style.opacity = "0.7";
-//       let nextOffsetX = curLeft + e.clientX - startX;
-//       let nextOffsetY = curTop + e.clientY - startY;
-
-//       if (nextOffsetX < 0) {
-//         nextOffsetX = 0;
-//       } else if (nextOffsetX + clientWidth > viewportWidth) {
-//         nextOffsetX = viewportWidth - clientWidth;
-//       }
-//       if (nextOffsetY < 0) {
-//         nextOffsetY = 0;
-//       } else if (nextOffsetY + clientHeight > viewportHeight) {
-//         nextOffsetY = viewportHeight - clientHeight;
-//       }
-//       targetRef.current.style.left = `${nextOffsetX}px`;
-//       targetRef.current.style.top = `${nextOffsetY}px`;
-//     };
-
-//     const mouseUp = (e) => {
-//       window.removeEventListener("mousemove", mouseMove);
-//       window.removeEventListener("mouseup", mouseUp);
-//       targetRef.current.style.opacity = "1";
-//     };
-
-//     window.addEventListener("mousemove", mouseMove);
-//     window.addEventListener("mouseup", mouseUp);
-//   };
-
-//   const TargetComponent = React.cloneElement(children, {
-//     ref: targetRef,
-//     onMouseDown: mouseDown,
-//     style: { position: "absolute" },
-//   });
-
-//   return <React.Fragment>{TargetComponent}</React.Fragment>;
-// }
-
-// export default Draggable;

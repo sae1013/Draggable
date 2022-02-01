@@ -8,9 +8,11 @@ function App() {
   return (
     <div className={classes.App}>
       <Draggable>
-        <div className={classes.box}>박스</div>
+        <div className={classes.box}>타겟</div>
       </Draggable>
-      {/* <Draggable2></Draggable2> */}
+      {/* <Draggable2>
+        <div className={classes.box}>타겟</div>
+      </Draggable2> */}
     </div>
   );
 }

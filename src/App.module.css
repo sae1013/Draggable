@@ -3,13 +3,3 @@
   position: relative;
   overflow:scroll
 }
-
-.box {
-  box-sizing: border-box;
-  width:200px;
-  height:200px;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: yellowgreen;
-  
-}
