@@ -1,11 +1,13 @@
-import React from "react";
+import React,{forwardRef} from "react";
 import classes from "./Draggable.module.css";
 
 function Draggable({ children }) {
   const targetRef = React.useRef(null)
-  React.useEffect(()=>{
-    console.dir(targetRef.current.classList[0]) 
-  })
+  
+  // React.useEffect(()=>{
+  //   console.log(targetRef.current)
+  // })
+  
   const mouseDown = (e) => {
     const [curLeft,curTop] = [targetRef.current.offsetLeft,targetRef.current.offsetTop]
     const [startX,startY] = [e.clientX,e.clientY]
@@ -45,15 +47,14 @@ function Draggable({ children }) {
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
   };
+  
+  const TargetComponent = React.cloneElement(children,{ref:targetRef,onMouseDown:mouseDown,style:{position:'absolute'}})
 
   return (
-    <div
-      id="target"
-      ref = {targetRef}
-      className={classes.container}
-      onMouseDown={mouseDown}
-    ></div>
-  );
+    <React.Fragment>
+      {TargetComponent}
+    </React.Fragment>
+  )
 }
 
 export default Draggable;
